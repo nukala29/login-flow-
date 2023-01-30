@@ -1,0 +1,59 @@
+Step1
+Http request 
+
+var request = http.MultipartRequest('GET', Uri.parse('https://login.microsoftonline.com/2ab67a71-d498-4fc1-9b6f-5151fb795060/oauth2/v2.0/authorize?response_type=code&client_id=clinet-id&scope=https://graph.microsoft.com/.default &redirect_uri=https%3A%2F%2Flocalhost'));
+
+
+http.StreamedResponse response = await request.send();
+
+if (response.statusCode == 200) {
+  print(await response.stream.bytesToString());
+}
+else {
+  print(response.reasonPhrase);
+}
+
+you get the code you laredy implemnyted in your application
+------------------------------------------------------------------------------------------------------
+Step 2:
+
+
+var request = http.MultipartRequest('POST', Uri.parse('https://login.microsoftonline.com/tenat-id/oauth2/v2.0/token'));
+request.fields.addAll({
+  'grant_type': 'authorization_code',
+  'code': '0.ASgAcXq2KpjUwU-bb1FR-3lQYChcQpnupVNCj5FbUuXpzPUaABE.AgABAAIAAAD--DLA3VO7QrddgJg7WevrAgDs_wUA9P8jr7jXQQ6aMWNtaNrBpFoTGvopMqnPr3lkewgvIlVK9yjGGdlJUs2j6c0aDIdu00wG9U5nn4P_PJwcA39uyD9TkTv--sNFUOoIcCh0BEd8iEWUlpTcHyWxTAP7iEYsywb7heVvomE6N-2Jg8S_LKE6g3CzIltPkKDYB_nmHA-T7NluEAiw7LYPMOh_8cPzWlWapAXhriSWUVXY3kFSNg49XOBZJkkjKT069sztKSFUTef9_JkW5CeLq-P0Li0sWVaIH99m8s9zFaDtkjVGGGgc9pzYDm7KGLBdmIGE0iQ99vxoPWGbY4-LsdM_AR4xxD4bU1KS_9nfkQISkeP78wnQp7GxXYeR-pMvZGgpCDC4FYQRfLfQOO820wwg2B4F0_wyhFLCEW5PhwHbyfbnpl7RqWD8Zmq4alyOh5pCeWI_90jQloAVNQaUe0QSFWbBEtwF5NwGBNrPCWrgWgtPbr63lVD9e7NfRF6qbBbWrV69DxvEgO4gUnR_BwWqpf70sBsdhBaL_yxAwXDivv0G_CLrSI0pIqS7GUnkUQz5oU3caGIrWoPNvwLAbfQA3CjH_zPuBZfXSj1stsuCq31gH5xCgL5sJHjzBb0nmeqzrmj_mhW6_NjB-brMa05hCHWG4ifm54LduYDj4TuxM5R49E2MpLFDB_7-oIsYx70PEK_yLIuhuTFN9GVrfS1AQnad-qV46YgpYDFudpKYSM86siRyNwskhGePuTyTngBsciCL9PidBDTdleB_6m6rujZm0H54Dtj49UlRzlvkb21ioim3f1joHz0USMppTjZWPHUTHwjpr7lDkXv0E3ZbyCd7xSGiSXoEUo7Nj9BX74laNzyYQ2-8OYe-_pehnF7HY7X39etxA-t6gvAjEoVcgxr4gxQKLv7zYEYtwTR13YgWfEN2Vb2bkK77OUtne8DIHBApvI_sr8ontjGxD0RyFb4dUSQJIoFEueOVi-AMvCz5IvwoTD6SF3J0rYO2R7ckgA-faAwED0GIYFb2HjTLJ5GVLy8CPWTSPMvgNfB3ZIPlrLec9MSqqcsSIWtAAEFlcT7apeZs-HrqNOIBtXV2jxo0CI3e9_r38c8V0X_97SSMPUZX',
+  'redirect_uri': 'https://localhost',
+  'client_id': 'clientid',
+  'client_secret': 'clinet secret'
+});
+
+request.headers.addAll(headers);
+
+http.StreamedResponse response = await request.send();
+
+if (response.statusCode == 200) {
+  print(await response.stream.bytesToString());
+}
+else {
+  print(response.reasonPhrase);
+}
+ in the baove response you get the acess token 
+------------------------------------------------------------------------------------
+Step:3 use that acess tokne to call the graph api
+var headers = {
+  'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJub25jZSI6IjNWdGs0TEQ4bE5rV19nTVR3YTQxYjBHekZxalEyanp2aUNiWmphR2FXUm8iLCJhbGciOiJSUzI1NiIsIng1dCI6Ii1LSTNROW5OUjdiUm9meG1lWm9YcWJIWkdldyIsImtpZCI6Ii1LSTNROW5OUjdiUm9meG1lWm9YcWJIWkdldyJ9.eyJhdWQiOiJodHRwczovL2dyYXBoLm1pY3Jvc29mdC5jb20iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC8yYWI2N2E3MS1kNDk4LTRmYzEtOWI2Zi01MTUxZmI3OTUwNjAvIiwiaWF0IjoxNjc0NTc3NDAwLCJuYmYiOjE2NzQ1Nzc0MDAsImV4cCI6MTY3NDU4Mjk3MywiYWNjdCI6MCwiYWNyIjoiMSIsImFpbyI6IkFWUUFxLzhUQUFBQVN1ZmRJVjJURFdXaFI5ZWRZZzRIRlFSd3NoTE9Fa2JzbmQrZ3VXSUJ5TFFhNll1U3ZRdmpuYk1HK0J2aXZEeTkwNFNnREx2Z2xpL0tDMVNlcEhwTEFjd2NCSGZtbmlaeHlkWFFNcTV1aXZ3PSIsImFsdHNlY2lkIjoiMTpsaXZlLmNvbTowMDAzNDAwMUZFMjNDNjhEIiwiYW1yIjpbInB3ZCJdLCJhcHBfZGlzcGxheW5hbWUiOiJwb3N0bWFuIHRlc3RpbmciLCJhcHBpZCI6Ijk5NDI1YzI4LWE1ZWUtNDI1My04ZjkxLTViNTJlNWU5Y2NmNSIsImFwcGlkYWNyIjoiMSIsImVtYWlsIjoibmlyYW5qYW5udWthbGFAZ21haWwuY29tIiwiZmFtaWx5X25hbWUiOiJuaXJhbmphbiIsImdpdmVuX25hbWUiOiJudWthbGEiLCJpZHAiOiJsaXZlLmNvbSIsImlkdHlwIjoidXNlciIsImlwYWRkciI6Ijc2Ljg1LjY3LjQzIiwibmFtZSI6ImFjaHV0YSIsIm9pZCI6ImVjMzU3YzgyLTgwMzAtNDNiNi05ZmM2LTE0MTc3ZDFmZDFjMyIsInBsYXRmIjoiMyIsInB1aWQiOiIxMDAzQkZGREE0OTMyM0NGIiwicmgiOiIwLkFTZ0FjWHEyS3BqVXdVLWJiMUZSLTNsUVlBTUFBQUFBQUFBQXdBQUFBQUFBQUFBb0FPdy4iLCJzY3AiOiJEaXJlY3RvcnkuQWNjZXNzQXNVc2VyLkFsbCBHcm91cC5SZWFkV3JpdGUuQWxsIEdyb3VwTWVtYmVyLlJlYWRXcml0ZS5BbGwgVXNlci5NYW5hZ2VJZGVudGl0aWVzLkFsbCBVc2VyLlJlYWQgVXNlci5SZWFkV3JpdGUuQWxsIHByb2ZpbGUgb3BlbmlkIGVtYWlsIiwic2lnbmluX3N0YXRlIjpbImttc2kiXSwic3ViIjoiMkZFb2FXQ0ZkR0V1NEtlelNMWDdRb2NGVDBIcWJHcXowZW5HUkVYRzFPbyIsInRlbmFudF9yZWdpb25fc2NvcGUiOiJOQSIsInRpZCI6IjJhYjY3YTcxLWQ0OTgtNGZjMS05YjZmLTUxNTFmYjc5NTA2MCIsInVuaXF1ZV9uYW1lIjoibGl2ZS5jb20jbmlyYW5qYW5udWthbGFAZ21haWwuY29tIiwidXRpIjoiMEdDUkxCRk5VVTY1NTJrTGJhUXdBQSIsInZlciI6IjEuMCIsIndpZHMiOlsiNjJlOTAzOTQtNjlmNS00MjM3LTkxOTAtMDEyMTc3MTQ1ZTEwIiwiYjc5ZmJmNGQtM2VmOS00Njg5LTgxNDMtNzZiMTk0ZTg1NTA5Il0sInhtc19zdCI6eyJzdWIiOiJJV3Vva1M2X0lhTjJ6ZEw4bjFCa1FmQU1PaGJsZTFmZVRQOFdJNnloSlVVIn0sInhtc190Y2R0IjoxNTA0OTcxODUxfQ.cjMDTg5KVOj4FTvCEsvldzFJ5RL9sj3sSRy2BTW1ZG-XMnRqacZWyHsFn5XIratCCP8hBf_BmTPgmEXsmTM45SixGOZ4gmxiSBCQfAZWKDRKCac0SjPPY_iy89_uqZCgAMmz72FT2HclAXKf2IoKhZGBpPZY2jKIHry-6minugrNrRZhOK0esqhwsfERxHE81vQeTJWgLt6gbs92w6n7N9_EQdG7AZ5pnnQezol88sW_EIqVdRtzRDW_1oNTqdq8jAXMb_dHVTVzRjOVaUX8CWlaPsGJGsh18CG8Z95Kr1q2lMaPhkTRNN4pNYnVs6XY3ox6vmIF_3buulrpjZj1Pg'
+};
+var request = http.Request('GET', Uri.parse('https://graph.microsoft.com/v1.0/users'));
+
+request.headers.addAll(headers);
+
+http.StreamedResponse response = await request.send();
+
+if (response.statusCode == 200) {
+  print(await response.stream.bytesToString());
+}
+else {
+  print(response.reasonPhrase);
+}
+
+
